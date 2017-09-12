@@ -43,15 +43,22 @@ public class Lox {
     private static void run(String source) {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
 
-        // for now, print tokens
-        for (Token tok : tokens) {
-            System.out.println(tok);
-        }
+        // Stop if there was a syntax error
+        if (hadError) { return; }
+
+        System.out.println(new AstPrinter().print(expression));
     }
 
     static void error(int line, String message) {
         report(line, "", message);
+    }
+
+    static void error(Token token, String message) {
+        String location = token.type == TokenType.EOF ? " at end" : " at '" + token.lexeme + "'";
+        report(token.line, location, message);
     }
 
     private static void report(int line, String where, String message) {
