@@ -36,10 +36,19 @@ public class Lox {
     private static void runPrompt() throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
+        Balancer balancer = new Balancer();
+        Balancer.UpdateType retVal;
 
         for (;;) {
-            System.out.print("> ");
-            run(reader.readLine());
+            String prompt = "> ";
+            do {
+                System.out.print(prompt);
+                retVal = balancer.update(reader.readLine());
+                prompt = ". ";
+            } while (retVal == Balancer.UpdateType.Unbalanced);
+            if (retVal == Balancer.UpdateType.Balanced) {
+                run(balancer.getBuffer());
+            }
             hadError = false;
         }
     }
