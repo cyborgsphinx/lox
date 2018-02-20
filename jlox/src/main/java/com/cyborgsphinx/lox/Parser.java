@@ -1,5 +1,7 @@
 package com.cyborgsphinx.lox;
 
+import sun.tools.java.ClassDeclaration;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +26,9 @@ class Parser {
 
     private Stmt declaration() {
         try {
-            if (match(TokenType.FUN)) {
+            if (match(TokenType.CLASS)) {
+                return classDeclaration();
+            } else if (match(TokenType.FUN)) {
                 return function("function");
             } else if (match(TokenType.VAR)) {
                 return varDeclaration();
@@ -36,6 +40,20 @@ class Parser {
             synchronize();
             return null;
         }
+    }
+
+    private Stmt classDeclaration() throws ParseError {
+        Token name = consume(TokenType.IDENTIFIER, "Expect class name.");
+        consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
+
+        List<Stmt.Function> methods = new ArrayList<>();
+        while (!check(TokenType.RIGHT_BRACE) && !isAtEnd()) {
+            methods.add(function("method"));
+        }
+
+        consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
+
+        return new Stmt.Class(name, methods);
     }
 
     private Stmt statement() throws ParseError {
@@ -181,6 +199,9 @@ class Parser {
             if (expr instanceof Expr.Variable) {
                 Token name = ((Expr.Variable)expr).name;
                 return new Expr.Assign(name, value);
+            } else if (expr instanceof Expr.Get) {
+                Expr.Get get = (Expr.Get)expr;
+                return new Expr.Set(get.object, get.name, value);
             }
             error(equals, "Invalid assignment target.");
         }
@@ -277,6 +298,9 @@ class Parser {
         while (true) {
             if (match(TokenType.LEFT_PAREN)) {
                 expr = finishCall(expr);
+            } else if (match(TokenType.DOT)) {
+                Token name = consume(TokenType.IDENTIFIER, "Expect property name after '.'.");
+                expr = new Expr.Get(expr, name);
             } else {
                 break;
             }
@@ -295,6 +319,8 @@ class Parser {
             return new Expr.Literal(null);
         } else if (match(TokenType.NUMBER, TokenType.STRING)) {
             return new Expr.Literal(previous().literal);
+        } else if (match(TokenType.THIS)) {
+            return new Expr.This(previous());
         } else if (match(TokenType.IDENTIFIER)) {
             return new Expr.Variable(previous());
         } else if (match(TokenType.LEFT_PAREN)) {
