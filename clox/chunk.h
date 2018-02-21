@@ -20,6 +20,6 @@ typedef struct {
 void initChunk(Chunk* chunk);
 void freeChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte, unsigned line);
-int addConstant(Chunk* chunk, Value value);
+unsigned addConstant(Chunk* chunk, Value value);
 
 #endif //CLOX_CHUNK_H
