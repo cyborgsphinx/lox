@@ -5,3 +5,7 @@ out/
 
 */build/
 tags
+
+*/target/
+
+*/build-clox/
