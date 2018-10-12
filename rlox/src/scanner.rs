@@ -92,6 +92,16 @@ impl<'a> Iterator for Scanner<'a> {
                 } else {
                     return token!(TokenType::Less, "<", self.line);
                 },
+                '"' => {
+                    let mut buf = String::new();
+                    while let Some(c) = self.contents.next() {
+                        if c == '"' { break; }
+                        buf.push(c);
+                    }
+                    return token!(TokenType::Str, &buf, self.line);
+                },
+                ' ' | '\t' => {}, // skip quietly
+                '\n' => { self.line += 1; },
                 _ => return token!(TokenType::Error, "", self.line),
             }
         }
@@ -107,5 +117,30 @@ mod test {
     fn scanner_can_recognize_single_token() {
         let mut scanner = Scanner::new("=");
         assert_eq!(scanner.next(), Some(Token::new(TokenType::Equal, "=", 1)));
+        assert_eq!(scanner.next(), None);
+    }
+
+    #[test]
+    fn scanner_can_recognize_multiple_tokens() {
+        let mut scanner = Scanner::new("><");
+        assert_eq!(scanner.next(), Some(Token::new(TokenType::Greater, ">", 1)));
+        assert_eq!(scanner.next(), Some(Token::new(TokenType::Less, "<", 1)));
+        assert_eq!(scanner.next(), None);
+    }
+
+    #[test]
+    fn scanner_can_skip_whitespace() {
+        let mut scanner = Scanner::new("! !");
+        assert_eq!(scanner.next(), Some(Token::new(TokenType::Bang, "!", 1)));
+        assert_eq!(scanner.next(), Some(Token::new(TokenType::Bang, "!", 1)));
+        assert_eq!(scanner.next(), None);
+
+    }
+
+    #[test]
+    fn scanner_can_recognize_string_literal() {
+        let mut scanner = Scanner::new("\"hello\"");
+        assert_eq!(scanner.next(), Some(Token::new(TokenType::Str, "hello", 1)));
+        assert_eq!(scanner.next(), None);
     }
 }
