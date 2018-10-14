@@ -215,61 +215,74 @@ impl<'a> iter::FusedIterator for Scanner<'a> {}
 mod test {
     use super::*;
 
+    fn token_sequence_test(scanner: &mut Scanner, tokens: Vec<Token>) {
+        for token in tokens {
+            assert_eq!(scanner.next(), Some(token));
+        }
+        assert_eq!(scanner.next(), None);
+    }
+
     #[test]
     fn scanner_can_recognize_single_token() {
         let mut scanner = Scanner::new("=");
-        assert_eq!(scanner.next(), Some(Token::from_type(TokenType::Equal)));
-        assert_eq!(scanner.next(), None);
+        token_sequence_test(
+            &mut scanner,
+            vec![Token::from_type(TokenType::Equal)]);
     }
 
     #[test]
     fn scanner_can_recognize_multiple_tokens() {
         let mut scanner = Scanner::new("><");
-        assert_eq!(scanner.next(), Some(Token::from_type(TokenType::Greater)));
-        assert_eq!(scanner.next(), Some(Token::from_type(TokenType::Less)));
-        assert_eq!(scanner.next(), None);
+        token_sequence_test(
+            &mut scanner,
+            vec![Token::from_type(TokenType::Greater),Token::from_type(TokenType::Less)])
     }
 
     #[test]
     fn scanner_can_skip_whitespace() {
         let mut scanner = Scanner::new("! !");
-        assert_eq!(scanner.next(), Some(Token::from_type(TokenType::Bang)));
-        assert_eq!(scanner.next(), Some(Token::from_type(TokenType::Bang)));
-        assert_eq!(scanner.next(), None);
+        token_sequence_test(
+            &mut scanner,
+            vec![Token::from_type(TokenType::Bang), Token::from_type(TokenType::Bang)]);
     }
 
     #[test]
     fn scanner_can_recognize_string_literal() {
         let mut scanner = Scanner::new("\"hello\"");
-        assert_eq!(scanner.next(), Some(Token::new(TokenType::Str, "hello")));
-        assert_eq!(scanner.next(), None);
+        token_sequence_test(
+            &mut scanner,
+            vec![Token::new(TokenType::Str, "hello")]);
     }
 
     #[test]
     fn scanner_can_recognize_identifier() {
         let mut scanner = Scanner::new("id");
-        assert_eq!(scanner.next(), Some(Token::new(TokenType::Identifier, "id")));
-        assert_eq!(scanner.next(), None);
+        token_sequence_test(
+            &mut scanner,
+            vec![Token::new(TokenType::Identifier, "id")]);
     }
 
     #[test]
     fn scanner_can_recognize_true() {
         let mut scanner = Scanner::new("true");
-        assert_eq!(scanner.next(), Some(Token::from_type(TokenType::True)));
-        assert_eq!(scanner.next(), None);
+        token_sequence_test(
+            &mut scanner,
+            vec![Token::from_type(TokenType::True)]);
     }
 
     #[test]
     fn scanner_can_recognize_super() {
         let mut scanner = Scanner::new("super");
-        assert_eq!(scanner.next(), Some(Token::from_type(TokenType::Super)));
-        assert_eq!(scanner.next(), None);
+        token_sequence_test(
+            &mut scanner,
+            vec![Token::from_type(TokenType::Super)]);
     }
 
     #[test]
     fn scanner_does_not_recognize_super_inside_superb() {
         let mut scanner = Scanner::new("superb");
-        assert_eq!(scanner.next(), Some(Token::new(TokenType::Identifier, "superb")));
-        assert_eq!(scanner.next(), None);
+        token_sequence_test(
+            &mut scanner,
+            vec![Token::new(TokenType::Identifier, "superb")]);
     }
 }
