@@ -1,6 +1,8 @@
-use std::env;
+extern crate rlox;
+use rlox::scanner;
 
-mod scanner;
+use std::{io,env};
+use std::io::{Write,BufRead};
 
 fn run(args: Vec<String>) -> Result<(), i32> {
     match args.len() {
@@ -11,6 +13,21 @@ fn run(args: Vec<String>) -> Result<(), i32> {
 }
 
 fn run_repl() -> Result<(), i32> {
+    loop {
+        print!("> ");
+        let _ = io::stdout().flush();
+        let mut buf = String::new();
+        let stdin = io::stdin();
+        let val = stdin.lock().read_line(&mut buf);
+        match val {
+            Err(e) => return Err(e.raw_os_error().unwrap_or(-1)),
+            Ok(0) => break,
+            _ => {},
+        }
+        for token in scanner::Scanner::new(&buf) {
+            println!("{:?}", token);
+        }
+    }
     Ok(())
 }
 
