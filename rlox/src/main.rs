@@ -1,14 +1,17 @@
 extern crate rlox;
 use rlox::scanner;
 
-use std::{io,env};
-use std::io::{Write,BufRead};
+use std::{io, env};
+use std::io::{Write, BufRead};
 
 fn run(args: Vec<String>) -> Result<(), i32> {
     match args.len() {
         1 => run_repl(),
         2 => interpret_file(&args[1]),
-        _ => {eprintln!("Usage: rlox [file]"); Err(64)},
+        _ => {
+            eprintln!("Usage: rlox [file]");
+            Err(64)
+        }
     }
 }
 
@@ -22,7 +25,7 @@ fn run_repl() -> Result<(), i32> {
         match val {
             Err(e) => return Err(e.raw_os_error().unwrap_or(-1)),
             Ok(0) => break,
-            _ => {},
+            _ => {}
         }
         for token in scanner::Scanner::new(&buf) {
             println!("{:?}", token);
