@@ -261,6 +261,16 @@ impl<'a> iter::Iterator for Scanner<'a> {
                     return Some(self.make_token(TokenType::Str, &self.buffer));
                 }
                 'a'...'z' | 'A'...'Z' | '_' => return Some(self.word_starting_with(ch)),
+                // zero should not start an integer
+                '0' => {
+                    self.buffer.push(ch);
+                    self.get_rest_of_number();
+                    return if self.buffer.len() == 1 || self.buffer.contains('.') {
+                        Some(self.make_token(TokenType::Number, &self.buffer))
+                    } else {
+                        Some(self.make_token(TokenType::Error, "Integer must not begin with '0'"))
+                    }
+                }
                 '1'...'9' => {
                     self.buffer.push(ch);
                     self.get_rest_of_number();

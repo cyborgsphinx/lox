@@ -1,7 +1,7 @@
 extern crate rlox;
 use rlox::scanner;
 
-use std::{io, env};
+use std::{env, fs, io};
 use std::io::{Write, BufRead};
 
 fn run(args: Vec<String>) -> Result<(), i32> {
@@ -36,6 +36,11 @@ fn run_repl() -> Result<(), i32> {
 
 fn interpret_file(file_name: &str) -> Result<(), i32> {
     let _ = file_name;
+    let contents = fs::read_to_string(file_name).map_err(|e| e.raw_os_error().unwrap_or(-1))?;
+    let scanner = scanner::Scanner::new(&contents);
+    for token in scanner {
+        println!("{:?}", token);
+    }
     Ok(())
 }
 
