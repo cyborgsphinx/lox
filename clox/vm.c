@@ -32,10 +32,12 @@ void initVM() {
     // init goes here
     resetStack();
     vm.objects = NULL;
+    initTable(&vm.strings);
 }
 
 void freeVM() {
     // free goes here
+    freeTable(&vm.strings);
     freeObjects();
 }
 
