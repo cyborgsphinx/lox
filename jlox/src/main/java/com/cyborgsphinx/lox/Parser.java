@@ -1,7 +1,5 @@
 package com.cyborgsphinx.lox;
 
-import sun.tools.java.ClassDeclaration;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

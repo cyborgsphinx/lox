@@ -15,6 +15,7 @@ public class Balancer {
     }
 
     UpdateType update(String input) {
+        if (input == null) return UpdateType.Error;
         for (char c : input.toCharArray()) {
             switch (c) {
                 case '(':
@@ -26,7 +27,6 @@ public class Balancer {
                         unbalanced.pop();
                     } else {
                         Lox.error(lines, "Too many ')' given.");
-                        //Lox.error(, "Too many ')' given.");
                         buffer.setLength(0);
                         return UpdateType.Error;
                     }
@@ -36,7 +36,6 @@ public class Balancer {
                         unbalanced.pop();
                     } else {
                         Lox.error(lines, "Too many '}' given.");
-                        //Lox.error(token, "Too many '}' given.");
                         buffer.setLength(0);
                         return UpdateType.Error;
                     }

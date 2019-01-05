@@ -48,6 +48,8 @@ public class Lox {
             } while (retVal == Balancer.UpdateType.Unbalanced);
             if (retVal == Balancer.UpdateType.Balanced) {
                 run(balancer.getBuffer());
+            } else if (retVal == Balancer.UpdateType.Error) {
+                break;
             }
             hadError = false;
         }
