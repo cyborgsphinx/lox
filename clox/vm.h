@@ -13,6 +13,7 @@ typedef struct {
     Value stack[STACK_SIZE];
     Value* stackTop;
     Table strings;
+    Table globals;
     Obj* objects;
 } VM;
 
