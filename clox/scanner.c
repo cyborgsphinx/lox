@@ -129,6 +129,7 @@ static TokenType identifierType() {
 
         default: return TOKEN_IDENTIFIER;
     }
+    return TOKEN_IDENTIFIER;
 }
 
 static bool isDigit(char c) {
