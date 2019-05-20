@@ -1,0 +1,16 @@
+for (var i = 0; i < 5; i = i + 1) {
+	print i;
+}
+
+{
+	var i = 5;
+	while (i > 0) {
+		print i;
+		i = i - 1;
+	}
+
+	var j = 3;
+	if (i == 0 and j > i) {
+		print j;
+	}
+}
