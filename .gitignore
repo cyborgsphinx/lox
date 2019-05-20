@@ -8,4 +8,5 @@ tags
 
 */target/
 
-*/build-clox/
+build-clox/
+*/compile_commands.json
