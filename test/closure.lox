@@ -8,3 +8,23 @@ var a = "global";
     var a = "block";
     showA();
 }
+
+fun outer() {
+	var x = 1;
+	fun inner() {
+		print x;
+	}
+	return inner;
+}
+
+var printer = outer();
+printer();
+
+fun out() {
+	var x = "before";
+	fun in() {
+		x = "assigned";
+	}
+	inner();
+	print x;
+}
