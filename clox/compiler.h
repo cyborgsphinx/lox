@@ -4,7 +4,9 @@
 #include "object.h"
 #include "vm.h"
 #include "chunk.h"
+#include "memory.h"
 
 ObjFunction* compile(const char* source);
+void markCompilerRoots();
 
 #endif //CLOX_COMPILER_H
