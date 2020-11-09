@@ -105,6 +105,14 @@ ObjUpvalue* newUpvalue(Value* slot) {
     return upvalue;
 }
 
+static void printFunction(ObjFunction* function) {
+    if (function->name == NULL) {
+        printf("<script>");
+        return;
+    }
+    printf("<fn %s>", function->name->chars);
+}
+
 void printObject(Value value) {
     switch (OBJ_TYPE(value)) {
         case OBJ_CLOSURE:
@@ -114,7 +122,7 @@ void printObject(Value value) {
                 printf("<fn %s>", AS_CLOSURE(value)->function->name->chars);
             break;
         case OBJ_FUNCTION:
-            printf("<fn %s>", AS_FUNCTION(value)->name->chars);
+            printFunction(AS_FUNCTION(value));
             break;
         case OBJ_NATIVE:
             printf("<native fn>");
