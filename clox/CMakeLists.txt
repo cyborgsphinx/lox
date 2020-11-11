@@ -5,14 +5,16 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(clox
-    main.c
-    chunk.c
-    compiler.c
-    debug.c
-    memory.c
-    object.c
-    scanner.c
-    table.c
-    value.c
-    vm.c
+    src/main.c
+    src/chunk.c
+    src/compiler.c
+    src/debug.c
+    src/memory.c
+    src/object.c
+    src/scanner.c
+    src/table.c
+    src/value.c
+    src/vm.c
     )
+
+target_include_directories(clox PRIVATE include)
