@@ -67,7 +67,8 @@ static void blackenObject(Obj* object) {
     printf("\n");
 #endif
     switch (object->type) {
-        case OBJ_CLOSURE: {
+        case OBJ_CLOSURE:
+        {
             ObjClosure* closure = (ObjClosure*)object;
             markObject((Obj*)closure->function);
             for (int i = 0; i < closure->upvalueCount; i++) {
@@ -75,7 +76,8 @@ static void blackenObject(Obj* object) {
             }
             break;
         }
-        case OBJ_FUNCTION: {
+        case OBJ_FUNCTION:
+        {
             ObjFunction* function = (ObjFunction*)object;
             markObject((Obj*)function->name);
             markArray(&function->chunk.constants);
@@ -91,8 +93,12 @@ static void blackenObject(Obj* object) {
 }
 
 static void freeObject(Obj* object) {
+#ifdef DEBUG_LOG_GC
+    printf("%p free type %d\n", (void*)object, object->type);
+#endif
     switch (object->type) {
-        case OBJ_CLOSURE: {
+        case OBJ_CLOSURE:
+        {
             ObjClosure* closure = (ObjClosure*)object;
             FREE_ARRAY(Value, closure->upvalues, closure->upvalueCount);
             FREE(ObjClosure, object);

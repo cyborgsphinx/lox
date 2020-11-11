@@ -2,7 +2,7 @@
 	var a = "global";
 	fun showA() {
 		print a;
-		}
+	}
 
 	showA();
 	a = "block";
@@ -22,9 +22,10 @@ printer();
 
 fun out() {
 	var x = "before";
-	fun in() {
+	fun inner() {
 		x = "assigned";
 	}
 	inner();
 	print x;
 }
+out();

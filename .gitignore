@@ -11,3 +11,4 @@ tags
 build-clox/
 */compile_commands.json
 */.clangd/
+*/.ccls-cache/

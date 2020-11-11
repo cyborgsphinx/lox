@@ -9,6 +9,22 @@
 
 #define ALLOCATE_OBJ(type, objectType) (type*)allocateObject(sizeof(type), objectType)
 
+static char const * const typeToString(ObjType type) {
+    switch (type) {
+        case OBJ_CLOSURE:
+            return "Closure";
+        case OBJ_FUNCTION:
+            return "Function";
+        case OBJ_NATIVE:
+            return "Native Function";
+        case OBJ_STRING:
+            return "String";
+        case OBJ_UPVALUE:
+            return "Upvalue";
+    }
+    return "Unknown";
+}
+
 static Obj* allocateObject(size_t size, ObjType type) {
     Obj* object = (Obj*)reallocate(NULL, 0, size);
     object->type = type;
@@ -16,7 +32,7 @@ static Obj* allocateObject(size_t size, ObjType type) {
     object->next = vm.objects;
     vm.objects = object;
 #ifdef DEBUG_LOG_GC
-    printf("%p allocate %ld for %d\n", (void*)object, size, type);
+    printf("%p allocate %ld for %s\n", (void*)object, size, typeToString(type));
 #endif
     return object;
 }

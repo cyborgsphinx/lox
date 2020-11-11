@@ -1,0 +1,5 @@
+fun id(a) {
+    return a;
+}
+
+print id("hello");
